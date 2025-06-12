@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Appointments</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #ffffff);
+      min-height: 100vh;
+      padding-top: 60px;
+      position: relative;
+    }
+
+    h2 {
+      font-weight: 600;
+      color: #0d47a1;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .table {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .table th {
+      background-color: #f1f9ff;
+      color: #0d47a1;
+      font-weight: 500;
+    }
+
+    .table td {
+      vertical-align: middle;
+    }
+
+    .btn {
+      font-size: 0.9rem;
+      padding: 6px 14px;
+    }
+
+    .quote-box {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 280px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      padding: 14px 18px;
+      border-left: 4px solid #1976d2;
+      border-radius: 10px;
+      font-style: italic;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #0d47a1;
+      z-index: 1000;
+    }
+
+    @media (max-width: 768px) {
+      .quote-box {
+        width: 90%;
+        top: auto;
+        bottom: 20px;
+        right: 5%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Medical Awareness Quotes -->
+  <div class="quote-box" id="quote-box">
+    “A healthy outside starts from the inside.”
+  </div>
+
+  <div class="container">
+    <h2>Your Appointments</h2>
+
+    {% if appointments %}
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+          <thead>
+            <tr>
+              <th>Doctor</th>
+              <th>Location</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Doctor's Comment</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for appt in appointments %}
+              <tr>
+                <td>{{ appt.doctor.name }}</td>
+                <td>{{ appt.doctor.location }}</td>
+                <td>{{ appt.date }}</td>
+                <td>{{ appt.time }}</td>
+                <td>
+                  {% if appt.status == 'Pending' %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                  {% elif appt.status == 'Confirmed' %}
+                    <span class="badge bg-success">Confirmed</span>
+                  {% elif appt.status == 'Canceled' %}
+                    <span class="badge bg-danger">Canceled</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{{ appt.status }}</span>
+                  {% endif %}
+                </td>
+                <td>{{ appt.comment or '-' }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted text-center">You have no appointments booked.</p>
+    {% endif %}
+
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <a href="{{ url_for('book_appointment') }}" class="btn btn-primary">Book New Appointment</a>
+      <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+    </div>
+  </div>
+
+  <script>
+    const quotes = [
+      "“A healthy outside starts from the inside.”",
+      "“Your health is an investment, not an expense.”",
+      "“Early detection saves lives.”",
+      "“Health is the greatest gift.”",
+      "“Don't ignore a symptom today that could be serious tomorrow.”"
+    ];
+
+    let quoteIndex = 0;
+    const quoteBox = document.getElementById('quote-box');
+
+    setInterval(() => {
+      quoteIndex = (quoteIndex + 1) % quotes.length;
+      quoteBox.textContent = quotes[quoteIndex];
+    }, 5000);
+  </script>
+</body>
+</html>

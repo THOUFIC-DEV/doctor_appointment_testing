@@ -1,0 +1,83 @@
+<!-- templates/doctor_blocked_slots.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Manage Blocked Slots</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Manage Blocked Time Slots - Dr. {{ doctor.name }}</h2>
+    <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-secondary mb-3">Back to Dashboard</a>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" class="mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label for="date" class="col-form-label">Date:</label>
+                <input type="date" name="date" id="date" class="form-control" required />
+            </div>
+            <div class="col-auto">
+                <label for="start_time" class="col-form-label">Start Time:</label>
+                <input type="time" name="start_time" id="start_time" class="form-control" required />
+            </div>
+            <div class="col-auto">
+                <label for="end_time" class="col-form-label">End Time:</label>
+                <input type="time" name="end_time" id="end_time" class="form-control" required />
+            </div>
+            <div class="col-auto">
+                <label for="reason" class="col-form-label">Reason:</label>
+                <select name="reason" id="reason" class="form-select" required>
+                    <option value="Clinical Work">Clinical Work</option>
+                    <option value="Offline Consultation">Offline Consultation</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="col-auto mt-4">
+                <button type="submit" class="btn btn-primary">Add Blocked Slot</button>
+            </div>
+        </div>
+    </form>
+
+    <h4>Existing Blocked Slots</h4>
+    {% if blocked_slots %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Reason</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for slot in blocked_slots %}
+                <tr>
+                    <td>{{ slot.date }}</td>
+                    <td>{{ slot.start_time }}</td>
+                    <td>{{ slot.end_time }}</td>
+                    <td>{{ slot.reason }}</td>
+                    <td>
+                        <form action="{{ url_for('delete_blocked_slot', slot_id=slot.id) }}" method="post" onsubmit="return confirm('Are you sure to delete this blocked slot?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No blocked slots found.</p>
+    {% endif %}
+</div>
+</body>
+</html>
