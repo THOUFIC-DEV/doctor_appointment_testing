@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # Groq API config
-GROQ_API_KEY = "API should be added here"
+GROQ_API_KEY = "API key should be added here"
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 @app.route("/chatbot", methods=["GET", "POST"])
